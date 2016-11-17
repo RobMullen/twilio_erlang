@@ -50,7 +50,10 @@ generate_claims(AccountSID, Capabilities, Opts) ->
         {"scope", unicode:characters_to_binary(FullScopeString, utf8)},
         {"iss", unicode:characters_to_binary(AccountSID, utf8)},
         {"exp", get_expiration(Opts)}
-    ].
+    ] ++ case proplists:get_value(grants, Opts, undefined) of
+	     undefined -> [];
+	     Other -> [{"grants", Other}]
+	 end.
 
 %% @doc Generates the expiration date for a token.
 -ifdef(ERLANG_OTP_VERSION_18_FEATURES).
