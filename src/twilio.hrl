@@ -1,0 +1,2 @@
+-type claim() :: {string() | atom(), string() | integer() | atom()}.
+-type crypto_algorithm() :: string().

@@ -10,16 +10,19 @@
 %%%-------------------------------------------------------------------
 -module(twilio_jsonjwt).
 
--export([encode/3]).
+-export([encode/3,
+         encode/4]).
 
--type claim() :: {string(), string() | integer() | atom()}.
-
--type crypto_algorithm() :: string().
+-include("twilio.hrl").
 
 %% @doc Encodes a JWT.  Algorithm should be "HS256" or "none".
--spec encode([claim()], string(), crypto_algorithm())-> string().
+-spec encode(list(claim()), string(), crypto_algorithm())-> binary().
 encode(Claims, Key, Algorithm) ->
-    Header = [{<<"typ">>, <<"JWT">>}, {<<"alg">>, list_to_binary(Algorithm)}],
+    encode(Claims, Key, Algorithm, []).
+
+-spec encode([claim()], string(), crypto_algorithm(), list())-> binary().
+encode(Claims, Key, Algorithm, ExtraHeaders) ->
+    Header = [{<<"typ">>, <<"JWT">>}, {<<"alg">>, list_to_binary(Algorithm)} | ExtraHeaders],
     HeaderJSON = unicode:characters_to_binary(mochijson2:encode({struct, Header}), utf8),
     HeaderEncoded = base64:encode(HeaderJSON),
 
@@ -42,5 +45,3 @@ sign("HS512", Key, Data) ->
     crypto:hmac(sha512, Key, Data);
 sign(_Algorithm, _Key, _Data) ->
     throw(unsupported_algorithm).
-
-
