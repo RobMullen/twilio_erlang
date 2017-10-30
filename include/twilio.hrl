@@ -171,3 +171,6 @@
 -define(CONFERENCEWaitMethod,      ["get", "post"]).
 -define(CONFERENCEMinParticipants, 2).
 -define(CONFERENCEMaxParticipants, 40).
+
+-type claim() :: {string() | atom(), string() | integer() | atom()}.
+-type crypto_algorithm() :: string().
